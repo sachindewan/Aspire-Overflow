@@ -12,12 +12,16 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.2" />
+    <PackageReference Include="Aspire.Hosting.Docker" Version="9.5.2-preview.1.25522.3" />
     <PackageReference Include="Aspire.Hosting.Keycloak" Version="9.3.1-preview.1.25305.6" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.5.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.5.0" />
+    <PackageReference Include="Aspire.Hosting.Yarp" Version="9.5.2-preview.1.25522.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\QuestionService\QuestionService.csproj" />
+    <ProjectReference Include="..\SearchService\SearchService.csproj" />
   </ItemGroup>
 
 </Project>

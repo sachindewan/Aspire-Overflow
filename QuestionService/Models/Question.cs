@@ -20,5 +20,7 @@ namespace QuestionService.Models
         public List<string> TagSlugs { get; set; } = [];
         public bool HasAcceptedAnswer { get; set; }
         public int Votes {  get; set; }
+        public int AnswerCount { get; set; } = 0;
+        public List<Answer> Answers { get; set; } = [];
     }
 }
