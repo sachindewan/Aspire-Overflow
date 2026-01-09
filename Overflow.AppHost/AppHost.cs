@@ -11,15 +11,21 @@ var rabbitmq = builder.AddRabbitMQ("messaging")
                         .WithManagementPlugin(15427);
 
 var keycloak = builder.AddKeycloak("keycloak", 6001)
-    .WithDataVolume("keycloak-data");
+    .WithRealmImport("../infra/realms")
+    .WithDataVolume("keycloak-data")
+    .WithEnvironment("KC_HTTP_ENABLED", "true")
+    .WithEnvironment("KC_HOSTNAME_STRICT", "false")
+    .WithEndpoint(6001, 8080, "keycloak", isExternal: true);
 
 var postgres = builder.AddPostgres("postgres", port: 5432)
         .WithDataVolume("postgres-data")
         .WithPgAdmin();
 
 var typesense = builder.AddContainer("typesense", "typesense/typesense", "29.0")
-                        .WithArgs("--data-dir", "data", "--api-key", typeSenseApiKey, "--enable-cors")
                         .WithVolume("typesense-data", "/data")
+                        .WithEnvironment("TYPESENSE_DATA_DIR", "/data")
+                        .WithEnvironment("TYPESENSE_ENABLES_CORS", "true")
+                        .WithEnvironment("TYPESENSE_API_KEY", typeSenseApiKey)
                         .WithHttpEndpoint(8108, 8108, "typesense");
 var typeSenseContainer = typesense.GetEndpoint("typesense");
 

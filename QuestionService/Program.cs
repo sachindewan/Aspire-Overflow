@@ -18,9 +18,14 @@ builder.Services.AddScoped<TagService>();
 builder.Services.AddAuthentication()
                 .AddKeycloakJwtBearer("keycloak",realm:"overflow", options =>
                 {
-                    options.Audience = "Overflow";
-                    options.Authority = "http://localhost:6001/realms/overflow";
+                    options.Audience = "overflow";
+                    //options.Authority = "http://localhost:6001/realms/overflow";
                     options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuers = new List<string> { "http://localhost:6001/realms/overflow", "http://keycloak/realms/overflow", "http://id.local.keycloak/realms/overflow" }
+                    };
                 });
 
 builder.AddNpgsqlDbContext<QuestionDbContext>("questionDb");
