@@ -1,4 +1,6 @@
+using Common;
 using Contracts;
+using ImTools;
 using JasperFx.Core;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -41,19 +43,13 @@ builder.Services.AddTypesenseClient(config =>
     };
 });
 
-builder.Services.AddOpenTelemetry().WithTracing(config =>
+await builder.UseWolverineWithRabbitMqAsync(opts =>
 {
-    config.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(builder.Environment.ApplicationName))
-    .AddSource("Wolverine");
-});
-
-builder.Host.UseWolverine(opts =>
-{
-    opts.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
     opts.ListenToRabbitQueue("questions.search", cfg =>
     {
         cfg.BindExchange("questions");
     });
+    opts.ApplicationAssembly = typeof(Program).Assembly;
 });
 
 var app = builder.Build();

@@ -1,7 +1,6 @@
-using JasperFx.Events;
+using Common;
+using ImTools;
 using Microsoft.EntityFrameworkCore;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using QuestionService.Data;
 using QuestionService.Services;
 using Wolverine;
@@ -15,32 +14,17 @@ builder.Services.AddOpenApi();
 builder.AddServiceDefaults();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<TagService>();
-builder.Services.AddAuthentication()
-                .AddKeycloakJwtBearer("keycloak",realm:"overflow", options =>
-                {
-                    options.Audience = "overflow";
-                    //options.Authority = "http://localhost:6001/realms/overflow";
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuers = new List<string> { "http://localhost:6001/realms/overflow", "http://keycloak/realms/overflow", "http://id.local.keycloak/realms/overflow" }
-                    };
-                });
+builder.Services.AddKeyCloakAuthentication();
 
 builder.AddNpgsqlDbContext<QuestionDbContext>("questionDb");
 
-builder.Services.AddOpenTelemetry().WithTracing(config =>
+
+await builder.UseWolverineWithRabbitMqAsync(opt =>
 {
-    config.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(builder.Environment.ApplicationName))
-    .AddSource("Wolverine");
+    opt.PublishAllMessages().ToRabbitExchange("questions");
+    opt.ApplicationAssembly = typeof(Program).Assembly;
 });
 
-builder.Host.UseWolverine(opts =>
-{
-    opts.UseRabbitMqUsingNamedConnection("messaging").AutoProvision();
-    opts.PublishAllMessages().ToRabbitExchange("questions");
-});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
