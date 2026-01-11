@@ -1,4 +1,6 @@
 using Aspire.Hosting;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -60,9 +62,15 @@ var yarp = builder.AddYarp("gateway")
       .WithEnvironment("VIRTUAL_HOST", "api.overflow.local")
       .WithEnvironment("VIRTUAL_PORT", "8001");
 
+var nodeApp = builder.AddJavaScriptApp("webapp", "../webapp", "dev")
+    .WithHttpEndpoint(port: 3000, env: "PORT")
+    .WithReference(keycloak);
 
-builder.AddContainer("nginx-proxy", "nginxproxy/nginx-proxy","1.8")
-    .WithEndpoint(80, 80, "nginx", isExternal: true)
-    .WithBindMount("/var/run/docker.sock", "/tmp/docker.sock", isReadOnly: true);
+if (!builder.Environment.IsDevelopment())
+{
+    builder.AddContainer("nginx-proxy", "nginxproxy/nginx-proxy", "1.8")
+        .WithEndpoint(80, 80, "nginx", isExternal: true)
+        .WithBindMount("/var/run/docker.sock", "/tmp/docker.sock", isReadOnly: true);
+}
 
 builder.Build().Run();
