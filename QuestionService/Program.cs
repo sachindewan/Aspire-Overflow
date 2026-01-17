@@ -16,12 +16,11 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<TagService>();
 builder.Services.AddKeyCloakAuthentication();
 
-builder.AddNpgsqlDbContext<QuestionDbContext>("questionDb");
+builder.AddAzureNpgsqlDbContext<QuestionDbContext>("questionDb");
 
 
 await builder.UseWolverineWithRabbitMqAsync(opt =>
 {
-    opt.PublishAllMessages().ToRabbitExchange("questions");
     opt.ApplicationAssembly = typeof(Program).Assembly;
 });
 

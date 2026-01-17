@@ -35,8 +35,7 @@ namespace QuestionService.Controllers
                 Title = dto.Title,
                 Content = dto.Content,
                 TagSlugs = dto.Tags,
-                AskerId = userId,
-                AskerDisplayName = name
+                AskerId = userId
             };
 
             dbContext.Questions.Add(question);
@@ -151,7 +150,6 @@ namespace QuestionService.Controllers
             {
                 QuestionId = questionId,
                 Content = answerDto.Content,
-                UserDisplayName = name,
                 UserId = userId,
             };
 

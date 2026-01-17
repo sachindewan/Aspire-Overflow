@@ -8,14 +8,11 @@ namespace QuestionService.Models
         [MaxLength(36)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [MaxLength(50)]
+        [MaxLength(1000)]
         public required string Content { get; set; }
 
         [MaxLength(50)]
         public required string UserId { get; set; }
-
-        [MaxLength(1000)]
-        public required string UserDisplayName { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
