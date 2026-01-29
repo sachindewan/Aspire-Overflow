@@ -39,6 +39,11 @@ namespace QuestionService.Controllers
             };
 
             dbContext.Questions.Add(question);
+            var tagsSlug = question.TagSlugs.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+            if(tagsSlug.Length > 0)
+            {
+                await dbContext.Tags.Where(x => tagsSlug.Contains(x.Slug)).ExecuteUpdateAsync(x=>x.SetProperty(t => t.UsageCount, t => t.UsageCount + 1));
+            }
             await dbContext.SaveChangesAsync();
 
             await messageBus.PublishAsync(new QuestionCreated
@@ -91,6 +96,22 @@ namespace QuestionService.Controllers
 
 
             var validTags = await tagService.IsValidTags(dto.Tags);
+
+            var tagSlug = question.TagSlugs.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+            var addedSlugs = dto.Tags.Except(tagSlug, StringComparer.OrdinalIgnoreCase).ToArray();
+            var removedSlugs = tagSlug.Except(dto.Tags, StringComparer.OrdinalIgnoreCase).ToArray();
+
+            if(addedSlugs.Length > 0)
+            {
+                await dbContext.Tags.Where(x => addedSlugs.Contains(x.Slug))
+                    .ExecuteUpdateAsync(x => x.SetProperty(t => t.UsageCount, t => t.UsageCount + 1));
+            }
+
+            if(removedSlugs.Length > 0)
+            {
+                await dbContext.Tags.Where(x => removedSlugs.Contains(x.Slug))
+                    .ExecuteUpdateAsync(x => x.SetProperty(t => t.UsageCount, t => t.UsageCount - 1));
+            }
 
             if (!validTags)
             {

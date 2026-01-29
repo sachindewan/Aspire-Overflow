@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService", "ProfileService\ProfileService.csproj", "{EC67BE17-BF17-41C1-98FB-469DE234FD64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsService", "StatsService\StatsService.csproj", "{3FCDAA4D-7141-422E-95D3-611A9E1E847B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{EC67BE17-BF17-41C1-98FB-469DE234FD64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC67BE17-BF17-41C1-98FB-469DE234FD64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC67BE17-BF17-41C1-98FB-469DE234FD64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FCDAA4D-7141-422E-95D3-611A9E1E847B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FCDAA4D-7141-422E-95D3-611A9E1E847B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FCDAA4D-7141-422E-95D3-611A9E1E847B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FCDAA4D-7141-422E-95D3-611A9E1E847B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{F9CB7E6F-B493-4833-A990-CCA91AC40415} = {7262D733-2C44-4A45-B1F6-98FC20F4EFB9}
 		{A8F88436-8AA7-4754-A094-90582FFC0D23} = {7262D733-2C44-4A45-B1F6-98FC20F4EFB9}
 		{EC67BE17-BF17-41C1-98FB-469DE234FD64} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3FCDAA4D-7141-422E-95D3-611A9E1E847B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85E2377F-F916-4836-9792-2EF09F42685B}

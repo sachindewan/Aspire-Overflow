@@ -18,6 +18,7 @@ namespace QuestionService.Models
         public DateTime UpdatedAt { get; set; }
 
         public bool Accepted { get; set; } = false;
+        public int Votes { get; set; }
 
         public string QuestionId { get; set; } = string.Empty;
 
