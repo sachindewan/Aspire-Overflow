@@ -7,18 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\Overflow.ServiceDefaults\Overflow.ServiceDefaults.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>
