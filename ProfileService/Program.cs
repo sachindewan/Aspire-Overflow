@@ -44,18 +44,7 @@ app.MapGet("/profiles", async (string ids, ProfileDbContext dbContext) =>
     return Results.Ok(profiles);
 }).RequireAuthorization();
 
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-try
-{
-    var context = services.GetRequiredService<ProfileDbContext>();
-    await context.Database.MigrateAsync();
-}
-catch (Exception ex)
-{
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occured while migrating or seeding the database.");
-}
+await app.MigrateDbContextAsync<ProfileDbContext>();
 
 app.Run();
 
