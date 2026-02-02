@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuestionService.Data;
@@ -37,23 +38,34 @@ namespace QuestionService.Controllers
                 TagSlugs = dto.Tags,
                 AskerId = userId
             };
-
-            dbContext.Questions.Add(question);
-            var tagsSlug = question.TagSlugs.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
-            if(tagsSlug.Length > 0)
+            await using var tx = dbContext.Database.BeginTransaction();
+            try
             {
-                await dbContext.Tags.Where(x => tagsSlug.Contains(x.Slug)).ExecuteUpdateAsync(x=>x.SetProperty(t => t.UsageCount, t => t.UsageCount + 1));
-            }
-            await dbContext.SaveChangesAsync();
+                dbContext.Questions.Add(question);
+                var tagsSlug = question.TagSlugs.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
+                if (tagsSlug.Length > 0)
+                {
+                    await dbContext.Tags.Where(x => tagsSlug.Contains(x.Slug)).ExecuteUpdateAsync(x => x.SetProperty(t => t.UsageCount, t => t.UsageCount + 1));
+                }
+                await dbContext.SaveChangesAsync();
 
-            await messageBus.PublishAsync(new QuestionCreated
-                (
-                question.Id,
-                question.Title,
-                question.Content,
-                question.CreatedAt,
-                question.TagSlugs
-                ));
+                await messageBus.PublishAsync(new QuestionCreated
+                    (
+                    question.Id,
+                    question.Title,
+                    question.Content,
+                    question.CreatedAt,
+                    question.TagSlugs
+                    ));
+
+                await tx.CommitAsync();
+            }
+            catch (Exception)
+            {
+               await tx.RollbackAsync();
+                throw;
+            }
+            
 
 
             return Created($"/questions/{question.Id}", question);
